@@ -15,7 +15,7 @@ export class HTMLComponent {
 
 	attachComponentHtml() {
 		// remove existing component if already existing
-		this.parentComponent.html.find('>.'+this.baseCssClass).remove() ;	
+		this.parentComponent.html.find('>.'+this.baseCssClass).remove() ;
 		$(this.html).appendTo(this.parentComponent.html) ;
 	}
 
@@ -24,7 +24,7 @@ export class HTMLComponent {
 	 **/
 	updateCssClasses() {
 		$(this.html).removeClass('*') ;
-		for (var item in this.cssClasses) {				
+		for (var item in this.cssClasses) {
 			if (this.cssClasses[item] === true) {
 				$(this.html).addClass(item) ;
 			} else {
@@ -38,16 +38,16 @@ export class HTMLComponent {
 			this.html = $('<div class="'+this.baseCssClass+'"></div>') ;
 			// remove existing component
 			// this.component.html.find('>.'+instance ).remove();
-			this.html.append(this.widgetHtml) ; 
+			this.html.append(this.widgetHtml) ;
 		} else {
 			this.html = $();
 		}
-	} 
+	}
 
 	attachHtml() {
 		this.updateCssClasses() ;
 		this.attachComponentHtml() ;
-	}	
+	}
 }
 
 export class GroupContenaire extends HTMLComponent {
@@ -69,26 +69,26 @@ export class GroupContenaire extends HTMLComponent {
 		// TODO : to be removed from here
 		this.value_selected = null ;
 		this.variableNamePreload = null ;
-	}		
+	}
 
-	
+
 	init() {
-		if (!this.cssClasses.Created) {			
+		if (!this.cssClasses.Created) {
 			this.cssClasses.IsOnEdit = true ;
 			this.initHtml() ;
 			this.attachHtml() ;
-			this.cssClasses.Created = true ;				
+			this.cssClasses.Created = true ;
 		} else {
 			this.updateCssClasses() ;
 		}
 	} ;
-} 
+}
 
 
 /**
  * Selection of the start class in a criteria/line
  **/
- export class StartClassGroup extends GroupContenaire { 
+ export class StartClassGroup extends GroupContenaire {
 
  	constructor(parentCriteriaGroup, specProvider, settings) {
  		super(
@@ -100,7 +100,7 @@ export class GroupContenaire extends HTMLComponent {
 		this.settings = settings;
 		this.cssClasses.StartClassGroup = true ;
 		this.cssClasses.Created = false ;
-		
+
 		this.inputTypeComponent = new ClassTypeId(this, specProvider) ;
 
 		// contains the name of the SPARQL variable associated to this component
@@ -118,7 +118,7 @@ export class GroupContenaire extends HTMLComponent {
 		select.sparnaturalSettings = this.settings ;
 		this.niceslect = $(select).niceSelect() ;
 
-		
+
 		$(this.html).find('select.input-val').on(
 			'change',
 			{arg1: this, arg2: 'onChange'},
@@ -128,11 +128,11 @@ export class GroupContenaire extends HTMLComponent {
 			$(this.html).find('select.input-val').trigger('change');
 			this.inputTypeComponent.needTriggerClick = false ;
 		}
-		
+
 	}
 
 	onChange() {
-		
+
 		//this.niceslect.niceSelect('update') ;
 		this.value_selected = $(this.html).find('select.input-val').val() ;
 
@@ -148,7 +148,7 @@ export class GroupContenaire extends HTMLComponent {
 			}
 		}
 
-		$(this.parentCriteriaGroup.StartClassGroup.html).find('.input-val').attr('disabled', 'disabled').niceSelect('update'); 
+		$(this.parentCriteriaGroup.StartClassGroup.html).find('.input-val').attr('disabled', 'disabled').niceSelect('update');
 		// trigger event on the whole line/criteria
 		$(this.parentCriteriaGroup).trigger( {type:"StartClassGroupSelected" } ) ;
 
@@ -174,7 +174,7 @@ export class GroupContenaire extends HTMLComponent {
 	getVarName() {
 		return this.varName;
 	}
-} 
+}
 
 
 
@@ -196,7 +196,7 @@ export class ObjectPropertyGroup extends GroupContenaire {
 		this.cssClasses = {
 			ObjectPropertyGroup : true,
 			Created : false
-		} ;		
+		} ;
 
 		this.objectPropertySelector = new SparnaturalComponents.ObjectPropertyTypeId(this, specProvider) ;
 
@@ -207,7 +207,7 @@ export class ObjectPropertyGroup extends GroupContenaire {
 	onStartClassGroupSelected() {
 		this.html.append('<span class="current temporary-label">'+this.temporaryLabel+'</span>') ;
 	}
-	
+
 	// triggered when a class is selected in the range
 	onEndClassGroupSelected() {
 		$(this.html).find('.temporary-label').remove() ;
@@ -223,7 +223,7 @@ export class ObjectPropertyGroup extends GroupContenaire {
 		var select = $(this.html).find('select.input-val') ;
 		select[0].sparnaturalSettings = this.settings ;
 		this.niceslect = $(this.html).find('select.input-val').niceSelect()  ;
-		$(this.html).find('.input-val').removeAttr('disabled').niceSelect('update'); 
+		$(this.html).find('.input-val').removeAttr('disabled').niceSelect('update');
 		// opens the select automatically
 		if(this.objectPropertySelector.needTriggerClick == false) {
 			$(this.html).find('.nice-select:not(.disabled)').trigger('click') ;
@@ -235,8 +235,8 @@ export class ObjectPropertyGroup extends GroupContenaire {
 			{arg1: this, arg2: 'onChange'},
 			SparnaturalComponents.eventProxiCriteria
 		);
-		
-		
+
+
 		if(this.objectPropertySelector.needTriggerClick == true) {
 			// $(this.html).find('.nice-select:not(.disabled)').trigger('click') ;
 			$(this.html).find('select.input-val:not(.disabled)').trigger('change');
@@ -254,9 +254,9 @@ export class ObjectPropertyGroup extends GroupContenaire {
 		this.value_selected = $(this.html).find('select.input-val').val() ;
 		// disable if only one possible property option between the 2 classes
 		if ($(this.html).find('.input-val').find('option').length == 1) {
-			$(this.html).find('.input-val').attr('disabled', 'disabled').niceSelect('update'); 
+			$(this.html).find('.input-val').attr('disabled', 'disabled').niceSelect('update');
 		}
-		$(this.parentCriteriaGroup).trigger( {type:"ObjectPropertyGroupSelected" } ) ;			
+		$(this.parentCriteriaGroup).trigger( {type:"ObjectPropertyGroupSelected" } ) ;
 		$(this.parentCriteriaGroup.thisForm_.sparnatural).trigger( {type:"submit" } ) ;
 
 		// sets tooltip ready
@@ -270,12 +270,12 @@ export class ObjectPropertyGroup extends GroupContenaire {
 		} else {
 			$(this.parentCriteriaGroup.ObjectPropertyGroup.html).removeAttr('data-tippy-content') ;
 		}
-		
+
 		//ici peut être lancer le reload du where si il y a des fils
 	};
-		
-	
-	
+
+
+
 }
 
 
@@ -298,7 +298,7 @@ export class EndClassGroup extends GroupContenaire {
 		this.cssClasses = {
 			EndClassGroup : true ,
 			Created : false
-		}; 
+		};
 		this.inputTypeComponent = new ClassTypeId(this, specProvider) ;
 
 		// contains the name of the SPARQL variable associated to this component
@@ -321,7 +321,7 @@ export class EndClassGroup extends GroupContenaire {
 
 		var select = $(this.html).find('select.input-val') ;
 		select[0].sparnaturalSettings = this.settings ;
-		
+
 		this.niceslect = $(this.html).find('select.input-val').niceSelect()  ;
 		if(this.inputTypeComponent.needTriggerClick == false) {
 			$(this.html).find('.nice-select:not(.disabled)').trigger('click') ;
@@ -339,7 +339,7 @@ export class EndClassGroup extends GroupContenaire {
 			//$(this.parentCriteriaGroup.thisForm.sparnatural).trigger( {type:"submit" } ) ;
 		}
 	}
-	
+
 	onChange() {
 		this.value_selected = $(this.html).find('select.input-val').val() ;
 
@@ -348,8 +348,8 @@ export class EndClassGroup extends GroupContenaire {
 			this.varName = "?"+localName(this.value_selected)+"_"+(this.parentCriteriaGroup.thisForm_.sparnatural.getMaxVarIndex()+1);
 		}
 
-		$(this.parentCriteriaGroup.EndClassGroup.html).find('.input-val').attr('disabled', 'disabled').niceSelect('update');	
-		
+		$(this.parentCriteriaGroup.EndClassGroup.html).find('.input-val').attr('disabled', 'disabled').niceSelect('update');
+
 		if (this.specProvider.hasConnectedClasses(this.value_selected)) {
 			$(this.parentCriteriaGroup.html).parent('li').removeClass('WhereImpossible') ;
 		} else {
@@ -378,7 +378,7 @@ export class EndClassGroup extends GroupContenaire {
 		}
 	};
 
-	onRemoveSelected() {			
+	onRemoveSelected() {
 		$(this.parentCriteriaGroup.html).find('>.EndClassWidgetGroup .EndClassWidgetValue span.unselect').trigger('click') ;
 		this.parentCriteriaGroup.ObjectPropertyGroup.cssClasses.Invisible = true ;
 		this.parentCriteriaGroup.ObjectPropertyGroup.init() ;
@@ -411,7 +411,7 @@ export class EndClassGroup extends GroupContenaire {
  **/
 export class OptionsGroup extends GroupContenaire {
 
-	constructor(parentCriteriaGroup, specProvider) { 
+	constructor(parentCriteriaGroup, specProvider) {
 		super(
 			"OptionsGroup",
 			parentCriteriaGroup
@@ -421,7 +421,7 @@ export class OptionsGroup extends GroupContenaire {
 		this.cssClasses.OptionsGroup = true ;
 		this.cssClasses.Created = false ;
 		this.valuesSelected = [] ;
-		
+
 		this.inputTypeComponent = new OptionTypeId(this, specProvider) ;
 
 		this.init() ;
@@ -501,10 +501,10 @@ export class OptionsGroup extends GroupContenaire {
 				} else {
 					this.valuesSelected[$(optionsInputs[item]).attr('data-id')]  = false ;
 					$(optionsInputs[item]).parents('label').first().removeClass('Enabled');
-					optionsInputs[item].checked = false; 
+					optionsInputs[item].checked = false;
 					$(optionsInputs[item]).parents('li.groupe').first().removeClass($(optionsInputs[item]).attr('data-id')+'-enabled') ;
-				}					
-			} else {					
+				}
+			} else {
 				this.valuesSelected[$(optionsInputs[item]).attr('data-id')]  = false ;
 				$(optionsInputs[item]).parents('label').first().removeClass('Enabled');
 				$(optionsInputs[item]).parents('li.groupe').first().removeClass($(optionsInputs[item]).attr('data-id')+'-enabled') ;
@@ -553,7 +553,7 @@ export class OptionsGroup extends GroupContenaire {
 	setClass(value) {
 		$(this.html).find('nice-select ul li[data-value="'+value+'"]').trigger('click');
 	}
-} 
+}
 
 
 /**
@@ -579,15 +579,15 @@ export class ClassTypeId extends HTMLComponent {
 	}
 
 	init() {
-		
-		//If Start Class 
+
+		//If Start Class
 		if (this.cssClasses.Created) {
 			this.updateCssClasses() ;
 			return true ;
 		}
 		var default_value_s = null ;
 		var default_value_o = null ;
-		
+
 		if(this.parentComponent.parentCriteriaGroup.jsonQueryBranch) {
 			var branch = this.parentComponent.parentCriteriaGroup.jsonQueryBranch
 			default_value_s = branch.line.sType ;
@@ -601,12 +601,12 @@ export class ClassTypeId extends HTMLComponent {
 		}
 
 		var selectHtml = null ;
-		
+
 		var id = this.parentComponent.parentCriteriaGroup.id ;
 		var selectBuilder = new ClassSelectBuilder(this.specProvider);
 
 		if (this.parentComponent.baseCssClass == "StartClassGroup") {
-			
+
 			var parentOrSibling = findParentOrSiblingCriteria(this.parentComponent.parentCriteriaGroup.thisForm_, id) ;
 			if (parentOrSibling) {
 				if (parentOrSibling.type == 'parent' ) {
@@ -622,18 +622,18 @@ export class ClassTypeId extends HTMLComponent {
 			} else {
 				this.cssClasses.Highlited = true ;
 			}
-			
+
 			this.id = 'a-'+id ;
 			this.rowIndex = id;
 			this.check
-			
+
 			selectHtml = selectBuilder.buildClassSelect(
 				null,
 				this.id,
 				default_value_s
 			);
-		} 
-		
+		}
+
 		if (this.parentComponent.baseCssClass == "EndClassGroup") {
 			this.id = 'b-'+id ;
 			selectHtml = selectBuilder.buildClassSelect(
@@ -642,18 +642,18 @@ export class ClassTypeId extends HTMLComponent {
 				default_value_o
 			);
 		}
-		
+
 		this.widgetHtml = selectHtml ;
 		this.cssClasses.IsOnEdit = true ;
 		this.initHtml() ;
 		this.attachHtml() ;
 		this.cssClasses.Created = true ;
-	} ;	
-	
+	} ;
+
 	reload() {
 		console.log("reload on ClassTypeId should probably never be called");
 		this.init();
-	} ;		
+	} ;
 };
 
 
@@ -675,7 +675,7 @@ export class ObjectPropertyTypeId extends HTMLComponent {
  		);
 
 		this.specProvider = specProvider;
-		this.needTriggerClick = false ;			
+		this.needTriggerClick = false ;
 	}
 
 	init(reload = false) {
@@ -693,13 +693,13 @@ export class ObjectPropertyTypeId extends HTMLComponent {
 			'c-'+this.parentComponent.parentCriteriaGroup.id,
 			default_value
 		) ;
-		
+
 		this.cssClasses.IsOnEdit = true ;
 		this.initHtml() ;
 		this.attachHtml() ;
 		this.cssClasses.Created = true ;
-	} ;	
-	
+	} ;
+
 	reload() {
 		this.init(true);
 	} ;
@@ -709,7 +709,7 @@ export class ObjectPropertyTypeId extends HTMLComponent {
 
 
 /**
- * 
+ *
  **/
  export class OptionTypeId extends HTMLComponent {
 
@@ -730,15 +730,15 @@ export class ObjectPropertyTypeId extends HTMLComponent {
  	}
 
 
-	init() {	
-		//If Start Class 
+	init() {
+		//If Start Class
 		if (this.cssClasses.Created) {
 			this.updateCssClasses() ;
 			return true ;
 		}
 		this.default_value['optional'] = false ;
 		this.default_value['notexist'] = false ;
-		
+
 		if(this.parentComponent.parentCriteriaGroup.jsonQueryBranch) {
 			var branch = this.parentComponent.parentCriteriaGroup.jsonQueryBranch
 			this.default_value['optional'] = branch.optional ;
@@ -755,19 +755,19 @@ export class ObjectPropertyTypeId extends HTMLComponent {
 			this.id,
 			this.default_value
 		);
-		
-		
+
+
 		this.widgetHtml = selectHtml ;
 		this.cssClasses.IsOnEdit = true ;
 		this.initHtml() ;
 		this.attachHtml() ;
 		this.cssClasses.Created = true ;
-	} ;	
-	
+	} ;
+
 	reload() {
 		console.log("reload on OptionTypeId should probably never be called");
 		this.init();
-	} ;		
+	} ;
 }
 
 
@@ -775,7 +775,7 @@ export class ObjectPropertyTypeId extends HTMLComponent {
  * Builds a selector for a class based on provided domainId, by reading the
  * configuration. If the given domainId is null, this means we populate the first
  * class selection (starting point) so reads all classes that are domains of any property.
- * 
+ *
  **/
 class ClassSelectBuilder {
 	constructor(specProvider) {
@@ -803,7 +803,7 @@ class ClassSelectBuilder {
 			if (!highlightedIcon || 0 === highlightedIcon.length) {
 				highlightedIcon = icon ;
 			}
-			
+
 			var image = (icon != null)?' data-icon="' + icon + '" data-iconh="' + highlightedIcon + '"':'' ;
 			//var selected = (default_value == val)?'selected="selected"':'';
 			var desc = this.specProvider.getTooltip(val) ;
@@ -811,7 +811,7 @@ class ClassSelectBuilder {
 			var description_attr = '';
 			if(desc) {
 				description_attr = ' data-desc="'+desc+'"';
-			} 
+			}
 			list.push( '<option value="'+val+'" data-id="'+val+'"'+image+selected+' '+description_attr+'  >'+ label + '</option>' );
 		}
 
@@ -828,21 +828,21 @@ class ClassSelectBuilder {
 
 
 /**
- * 
+ *
  **/
  class OptionSelectBuilder {
-	
+
  	constructor(specProvider, OptionTypeId) {
  		this.specProvider = specProvider;
 		this.OptionTypeId = OptionTypeId ;
- 	}		
+ 	}
 
-	buildOptionSelect(objectId, inputID, default_value) {			
+	buildOptionSelect(objectId, inputID, default_value) {
 		var items = [] ;
 		if(this.specProvider.isEnablingOptional(objectId)) {
 			items['optional'] = this.OptionTypeId.parentComponent.parentCriteriaGroup.thisForm_.langSearch.labelOptionOptional ;
 		}
-		
+
 		if(this.specProvider.isEnablingNegation(objectId)) {
 			items['notExists'] = this.OptionTypeId.parentComponent.parentCriteriaGroup.thisForm_.langSearch.labelOptionNotExists ;
 		}
@@ -877,7 +877,7 @@ class PropertySelectBuilder {
 	buildPropertySelect(domainClassID, rangeClassID, inputID, default_value) {
 		var list = [] ;
 		var items = this.specProvider.getConnectingProperties(domainClassID,rangeClassID) ;
-		
+
 		for (var key in items) {
 			var val = items[key];
 			var label = this.specProvider.getLabel(val) ;
@@ -886,7 +886,7 @@ class PropertySelectBuilder {
 			var description_attr = '';
 			if(desc) {
 				description_attr = ' data-desc="'+desc+'"';
-			} 
+			}
 			list.push( '<option value="'+val+'" data-id="'+val+'"'+selected+' '+description_attr+'  >'+ label + '</option>' );
 		}
 
@@ -912,18 +912,18 @@ export function findParentOrSiblingCriteria(thisForm_, id) {
 	var dependant = null ;
 	var dep_id = null ;
 	var element = $(thisForm_.sparnatural).find('li[data-index="'+id+'"]') ;
-	
-	if ($(element).parents('li').length > 0) {			
+
+	if ($(element).parents('li').length > 0) {
 		dep_id = $($(element).parents('li')[0]).attr('data-index') ;
 		dependant = {type : 'parent'}  ;
 	} else {
 		if ($(element).prev().length > 0) {
 			dep_id = $(element).prev().attr('data-index') ;
-			dependant = {type : 'sibling'}  ;				
+			dependant = {type : 'sibling'}  ;
 		}
 	}
 
-	$(thisForm_.sparnatural.components).each(function(index) {			
+	$(thisForm_.sparnatural.components).each(function(index) {
 		if (this.index == dep_id) {
 			dependant.element = this.CriteriaGroup ;
 		}
